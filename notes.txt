@@ -69,7 +69,7 @@ user = authenticate_session(session_params, email_or_username: %i(email username
 *** encapsulation - knowing where to go - everything related -> put together somewhere
 *** use whitespace correctly
 
-encapsulation groupigngs = ???, ???, expectations
+encapsulation groupings = ???, ???, expectations
 
 *** Shared partials -> application folder b/c template inheritence - "overwrite user bar by dumping in a partial" ???
 
@@ -90,3 +90,87 @@ before root "welcome#index", needs as: :dashboard
 *** database - rails still coming up to speed with databases (no foreign keys for example) `prepared statements` `laterals`
 
 *** form_for is slow, simple_form is slower, raw html is good?
+
+
+***  you should always build child object through the parent:
+ current_user.shouts.create(shout_params)
+
+*** languages: best practices = culture
+how would someone who knows ruby/python/C solve this problem?
+rather than "translating" familiar methods
+nothing you know about rails applies, stop thinking in your old language
+
+*** ruby, all about iterators, .self
+
+*** oauth with monban ...facebook ???
+
+<%= render @shouts %>
+<%= render "filename", collection: @shouts %>
+<%= render partial: "filename", locals { foo: "bar" } %>
+<%= render "filename", foo: "bar" %>
+
+<%= div_for(shout) do %>
+ <%= shout.body %>
+<% end %>
+
+*** write the code you want, and fill in the blanks
+
+*** "not worth forcing RESTFUL routes on everything" ???
+`member`
+`vanity routes` - good if they're conveying more information
+
+*** Error - object is nil in view, sometimes b/c of typo
+
+*** Scopes vs evil class methods (we should be talking to objects, not interfaces of objects) two separate concerns, two separate classes (only class method should be 'new'), doing the query, and defining how these objects relate to eachother
+
+*** Stateless class methods
+
+  def follow(user)
+    followed_users << user
+  end
+
+  `append` operator, `shovel` operator
+
+  <=> spaceship/compare operator
+
+*** "there is no turonary operator, or nil"
+
+*** business logic doesn't get `decorator`
+
+*** 2-3 rule: make a method if you're repeating code more than twice / things that can change the same way in multiple places
+
+*** Controllers:
+- no before filters
+
+- fat models, skinny controllers, stupid views
+- spike first, rewrite, refactor if you know how
+- "he always makes conditionals into methods, called what they do"
+
+??? `callbacks`
+
+self referential problem
+- through table
+- OR:
+
+  has_many :following_relationships,
+    foreign_key: :follower_id,
+    class_name: "FollowingRelationship"
+  has_many :followed_users,
+    through: :followed_user_relationships
+
+^ change the way rails works, by overriding ??? adding in the class name
+
+*** dashboard
+
+??? minimize instance variables, instead: attr_readers for them (single level of abstraction principal, single source of truth)
+
+separate way of communicating with objects, should be using just messages to communicate, and instance variables don't use messages, so this strays from pattern ???
+
+*** controllers can instantiate only one object
+that's it's main job, it's gotta do that
+that one object can create other objects
+all it cares about is the toy
+
+*** law of demeter??? violations
+
+`delegate` `prefix option`
