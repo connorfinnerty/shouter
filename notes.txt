@@ -1,0 +1,92 @@
+rails new flags:
+-T skip test files
+-d postgresql
+-B skip bundle, so you can add to gemfile first and
+*** do bundle local when you don't have internet
+
+
+What does it mean that rails "has foreign keys" now?
+
+Prevents you from having records that can't exist in your system based on the rules you've defined
+
+Polymorphism (should we or shouldn't we use it) - can't have foreign keys
+
+Writing an API
+- jbuilder (templating language for JSON, "you have everything in actionview helpers" like current user) gem
+- activemodel serializers (has access to routing layer but not current user, so you'd have to monkey patch to bring in current user)
+
+Hash and array are extended using as_json
+
+for things like showing urls
+
+App Engines
+- isolated parts of rails app as its own app, devise and clarence do this
+- decisions made by devise must be overridden (changing views)
+- in devise, can't easily sign up with username and not email, sign in with username, change sign in form to have a few more fields
+Monban
+- you own your routes
+- bcrypt problem, tests were slow b/c encrypting passwords is slow, monkeypatch the constant to be 1 so bcrypt only runs once
+
+- if pg always asks for password, in pg_hba.conf peer/local trust
+
+- launch ctl commands - run things like postgres from boot
+- delete pid files if something's stuck
+
+??? How does monban security compare to devise
+
+*** Error - uninstall / reinstall gem when error about "library linked to" - your system has been updated since last time you've used that gem, updating static libraries
+
+*** Migrations - integrity - always look at migrations
+- null: false (don't need null values ???)- validations on db level (instead of validates presence true) - because the db can be hit from other sources than app
+
+*** do in-model validations right after migration so you don't forget
+
+- more integration tests, less unit tests (user fails to signup / succeeds, one happy path, one failure path, unit test for other failure paths)
+- unit tests *are* useful for ... validator class (???) matrix test
+- always TDD, don't add a method unless test indicates that it should
+
+*** he does all private unless public needs (keep public interface as small as possible)
+b/c nothing depends on them, so you can wait to see if there are patterns, to be open to refactoring
+
+Private vs. Protected methods
+- private - other instances of the same class can call this method (spaces)
+- protected - compare by internal state that you don't want exposed to outside world
+
+??? no interface checking, just public, private, protected
+
+user = authenticate_session(session_params, email_or_username: %i(email username)) <- check if email matches OR username
+%i returns symbols
+%w returns strings
+
+*** remote pairing - tmate (fork of tmux) and engrock??? good for pairing remotely cause you're looking at the same app
+- easy as brew install engrock, engrock 3000
+
+*** fresh app ***
+- clear comments
+
+*** limit controller actions to CRUD resources
+
+*** encapsulation - knowing where to go - everything related -> put together somewhere
+*** use whitespace correctly
+
+encapsulation groupigngs = ???, ???, expectations
+
+*** Shared partials -> application folder b/c template inheritence - "overwrite user bar by dumping in a partial" ???
+
+*** duplicaiton - instead of finding similar code, but *intent is the same, even though they're the same right now, this one is oging to change in a different way
+
+*** is_current_user vs. is_signed in (different intent by author) => adding layers of abstraction -> Lisp programming -> so eveything reads well
+
+*** `route constraints` -  conditions for changing routes (use as little as possible, maybe just signed_in? / not)
+
+before root "welcome#index", needs as: :dashboard
+  constraints Monban::Constraints::SignedIn.new do
+    root "dashboards#show", as: :dashboard
+  end
+
+*** looking at routes tells you almost everything you need to know about an app
+*** security issue - be explicit about routes (always do only: [:new, :create, etc] so there's no forgotten vulnerable routes
+
+*** database - rails still coming up to speed with databases (no foreign keys for example) `prepared statements` `laterals`
+
+*** form_for is slow, simple_form is slower, raw html is good?
